@@ -30,6 +30,13 @@ Sempre que você criar uma funcionalidade, corrigir um bug ou mudar o visual, ad
 
 ---
 
+## [1.1.1] - 2026-11-26
+
+### 🐛 Corrigido
+- **Ocultação da Tela de Boas-Vindas:** A tela inicial com as sugestões agora é ocultada automaticamente tanto ao enviar uma mensagem quanto ao receber notificações do sistema ou confirmação de salvamento de configurações, evitando sobreposição visual na tela de chat.
+
+---
+
 ## [1.1.0] - 2026-11-26
 
 ### ✨ Adicionado

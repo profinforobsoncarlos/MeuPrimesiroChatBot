@@ -343,6 +343,10 @@ Feito isso, poderei responder sobre qualquer assunto com inteligência de ponta!
 
 // Renderizar mensagem do usuário na tela
 function appendUserMessage(text) {
+  if (welcomeScreen) {
+    welcomeScreen.style.display = 'none';
+  }
+
   const row = document.createElement('div');
   row.className = 'message-row user';
 
@@ -368,6 +372,10 @@ function appendUserMessage(text) {
 
 // Renderizar mensagem do bot na tela com Markdown formatado
 function appendBotMessage(markdownText) {
+  if (welcomeScreen) {
+    welcomeScreen.style.display = 'none';
+  }
+
   const row = document.createElement('div');
   row.className = 'message-row bot';
 
