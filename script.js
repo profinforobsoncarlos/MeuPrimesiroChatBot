@@ -2,9 +2,12 @@
  * Meu Primeiro ChatBot com IA (Gemini API + Modo Demonstração)
  */
 
+// Chave de API padrão do projeto (permite que qualquer visitante use a IA sem precisar configurar nada)
+const DEFAULT_API_KEY = 'AQ.Ab8RN6Igiss82QICrOnaBGAzf5tpkZntcGUFEWzJihBd9FroMQ';
+
 // Estado da Aplicação
 const state = {
-  apiKey: localStorage.getItem('gemini_api_key') || '',
+  apiKey: localStorage.getItem('gemini_api_key') || DEFAULT_API_KEY,
   model: localStorage.getItem('gemini_model') || 'gemini-3.1-flash-lite',
   systemPrompt: localStorage.getItem('gemini_system_prompt') || 'Você é um assistente virtual inteligente, amigável, prestativo e atencioso. Responda em português de forma clara, natural e organizada.',
   history: [], // Histórico para a API [{ role: "user" | "model", parts: [{ text: "..." }] }]

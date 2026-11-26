@@ -30,6 +30,16 @@ Sempre que você criar uma funcionalidade, corrigir um bug ou mudar o visual, ad
 
 ---
 
+## [1.2.0] - 2026-11-26
+
+### ✨ Adicionado
+- **Chave de API Pré-configurada por Padrão:** Agora o chatbot já vem conectado de fábrica à IA do Gemini. Qualquer visitante que abrir o link compartilhado (no celular ou computador) já conversa diretamente com o modelo de inteligência artificial em tempo real, sem necessidade de inserir chaves ou abrir telas de configuração.
+
+### 🔄 Modificado
+- Atualizado o rodapé da interface no [`index.html`](index.html) para informar que o assistente está online em tempo real.
+
+---
+
 ## [1.1.1] - 2026-11-26
 
 ### 🐛 Corrigido
