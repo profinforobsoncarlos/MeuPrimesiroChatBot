@@ -30,6 +30,19 @@ Sempre que você criar uma funcionalidade, corrigir um bug ou mudar o visual, ad
 
 ---
 
+## [1.1.0] - 2026-11-26
+
+### ✨ Adicionado
+- **Fallback Automático de Modelos:** Adicionada resiliência na chamada à API (`callGeminiAPI`). Se o modelo escolhido estiver com picos temporários de alta demanda (HTTP 503) ou indisponibilidade, o sistema tenta automaticamente o `gemini-3.1-flash-lite`, garantindo que o usuário nunca fique sem resposta.
+
+### 🔄 Modificado
+- **Atualização de Modelos do Gemini:** Atualizada a lista de modelos no [`index.html`](index.html) e o padrão no [`script.js`](script.js) para os modelos oficiais mais recentes:
+  - `gemini-3.1-flash-lite` (Padrão: ultrarrápido, alta disponibilidade e excelente tempo de resposta)
+  - `gemini-3.8-flash` (Última geração, raciocínio avançado)
+  - `gemini-flash-latest` (Versão contínua)
+
+---
+
 ## [1.0.0] - 2026-11-26
 
 ### ✨ Adicionado (Criação Inicial do Projeto)

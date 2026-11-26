@@ -5,7 +5,7 @@
 // Estado da Aplicação
 const state = {
   apiKey: localStorage.getItem('gemini_api_key') || '',
-  model: localStorage.getItem('gemini_model') || 'gemini-2.5-flash',
+  model: localStorage.getItem('gemini_model') || 'gemini-3.1-flash-lite',
   systemPrompt: localStorage.getItem('gemini_system_prompt') || 'Você é um assistente virtual inteligente, amigável, prestativo e atencioso. Responda em português de forma clara, natural e organizada.',
   history: [], // Histórico para a API [{ role: "user" | "model", parts: [{ text: "..." }] }]
   isWaitingResponse: false
@@ -218,9 +218,12 @@ async function handleSendMessage() {
   }
 }
 
-// Chamada real à API do Google Gemini
+// Chamada real à API do Google Gemini com fallback inteligente
 async function callGeminiAPI(latestText) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${state.model}:generateContent?key=${encodeURIComponent(state.apiKey)}`;
+  const modelsToTry = [state.model];
+  if (state.model !== 'gemini-3.1-flash-lite') {
+    modelsToTry.push('gemini-3.1-flash-lite');
+  }
 
   const payload = {
     contents: state.history,
@@ -234,29 +237,49 @@ async function callGeminiAPI(latestText) {
     }
   };
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
+  let lastError = null;
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const message = errorData.error?.message || `Erro ${response.status}: ${response.statusText}`;
-    throw new Error(message);
+  for (const modelName of modelsToTry) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(state.apiKey)}`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const message = errorData.error?.message || `Erro ${response.status}: ${response.statusText}`;
+        lastError = new Error(message);
+        // Se for erro de demanda (503) ou modelo não encontrado (404), tenta o próximo modelo
+        if (response.status === 503 || response.status === 404) {
+          continue;
+        }
+        throw lastError;
+      }
+
+      const data = await response.json();
+      const candidate = data.candidates?.[0];
+      const responseText = candidate?.content?.parts?.[0]?.text;
+
+      if (!responseText) {
+        throw new Error('A IA não retornou nenhum texto.');
+      }
+
+      return responseText;
+    } catch (err) {
+      lastError = err;
+      if (modelsToTry.indexOf(modelName) === modelsToTry.length - 1) {
+        throw lastError;
+      }
+    }
   }
 
-  const data = await response.json();
-  const candidate = data.candidates?.[0];
-  const responseText = candidate?.content?.parts?.[0]?.text;
-
-  if (!responseText) {
-    throw new Error('A IA não retornou nenhum texto.');
-  }
-
-  return responseText;
+  throw lastError || new Error('Não foi possível conectar à IA.');
 }
 
 // Respostas inteligentes para o Modo Demonstração (sem chave)
